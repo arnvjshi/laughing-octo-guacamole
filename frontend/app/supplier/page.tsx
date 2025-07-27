@@ -88,7 +88,7 @@ export default function SupplierDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
           ref={(el) => {
-            if (el) statsRef.current[0] = el
+            if (el) statsRef.current[0] = el;
           }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >
@@ -108,7 +108,7 @@ export default function SupplierDashboard() {
 
         <div
           ref={(el) => {
-            if (el) statsRef.current[1] = el
+            if (el) statsRef.current[1] = el;
           }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >
@@ -130,7 +130,7 @@ export default function SupplierDashboard() {
 
         <div
           ref={(el) => {
-            if (el) statsRef.current[2] = el
+            if (el) statsRef.current[2] = el;
           }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >
@@ -150,7 +150,7 @@ export default function SupplierDashboard() {
 
         <div
           ref={(el) => {
-            if (el) statsRef.current[3] = el
+            if (el) statsRef.current[3] = el;
           }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >

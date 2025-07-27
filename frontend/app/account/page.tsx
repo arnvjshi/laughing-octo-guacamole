@@ -55,6 +55,7 @@ export default function AccountPage() {
   const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
+  const profileRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
     // Check if user is logged in
@@ -685,7 +686,12 @@ export default function AccountPage() {
         </div>
       </div>
 
-      <div ref={containerRef} className="max-w-7xl mx-auto px-4 space-y-8">
+      <div
+        ref={(el) => {
+          containerRef.current = el
+        }}
+        className="max-w-7xl mx-auto px-4 space-y-8"
+      >
         {/* Enhanced Tab Navigation */}
         <AnimatedCard direction="up" delay={0.1}>
           <div className="glass-card p-3 border border-white/20 shadow-2xl">
