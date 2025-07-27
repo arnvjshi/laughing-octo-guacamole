@@ -108,7 +108,8 @@ export default function VendorDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
           ref={(el) => {
-            if (el) statsRef.current[0] = el;
+            if (!statsRef.current) return;
+            statsRef.current[0] = el;
           }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >
@@ -129,7 +130,9 @@ export default function VendorDashboard() {
         </div>
 
         <div
-          ref={(el) => el && (statsRef.current[1] = el)}
+          ref={(el) => {if (!statsRef.current) return; 
+                                statsRef.current[1] = el;
+          }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >
           <div className="flex items-center justify-between">
@@ -147,7 +150,10 @@ export default function VendorDashboard() {
         </div>
 
         <div
-          ref={(el) => el && (statsRef.current[2] = el)}
+          ref={(el) => {
+            if (!statsRef.current) return;
+            statsRef.current[2] = el;
+          }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >
           <div className="flex items-center justify-between">
@@ -165,7 +171,10 @@ export default function VendorDashboard() {
         </div>
 
         <div
-          ref={(el) => el && (statsRef.current[3] = el)}
+          ref={(el) => {
+            if (!statsRef.current) return;
+            statsRef.current[3] = el;
+          }}
           className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
         >
           <div className="flex items-center justify-between">
