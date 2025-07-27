@@ -434,7 +434,9 @@ export default function RequirementsPage() {
             {filteredRequirements.map((requirement, index) => (
               <div
                 key={requirement.id}
-                ref={(el) => el && (requirementsRef.current[index] = el)}
+                ref={(el) => {
+                  if (el) requirementsRef.current[index] = el;
+                }}
                 className="neuro-card p-6 hover:shadow-xl transition-all duration-300 group"
               >
                 {/* Header */}
