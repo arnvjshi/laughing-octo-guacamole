@@ -65,9 +65,7 @@ const nextConfig = {
   },
   
   // Experimental features
-  experimental: {
-    optimizePackageImports: ['lucide-react', 'date-fns'],
-    turbo: {
+  turbopack: {
       rules: {
         '*.svg': {
           loaders: ['@svgr/webpack'],
@@ -75,6 +73,10 @@ const nextConfig = {
         },
       },
     },
+
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'date-fns'],
+    
   },
   
   // Bundle analyzer
@@ -116,7 +118,7 @@ const nextConfig = {
   },
   
   // Output configuration
-   output: 'export',
+  output: 'standalone',
   
   // Logging
   logging: {
