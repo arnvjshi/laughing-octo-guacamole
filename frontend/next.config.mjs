@@ -123,7 +123,7 @@ assetPrefix: '/laughing-octo-guacamole/',
   },
   
   // Output configuration
-  output: 'standalone',
+  output: 'export',
   
   // Logging
   logging: {
