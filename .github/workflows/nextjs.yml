@@ -89,6 +89,10 @@ jobs:
         with:
           path: frontend/out
 
+      - name: Lint
+        run: npm run lint
+        working-directory: frontend
+
   # Deployment job
   deploy:
     environment:
