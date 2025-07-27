@@ -28,9 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: 'pnpm'
-          # Add cache-dependency-path for monorepo support
-          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install dependencies
         # Run this command inside the /frontend directory
