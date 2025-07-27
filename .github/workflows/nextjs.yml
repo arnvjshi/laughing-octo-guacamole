@@ -4,10 +4,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ] # Or your default branch
+    branches: [ "main" ]
   workflow_dispatch:
 
-# Allow this job to clone the repo and create a page deployment
 permissions:
   contents: read
   pages: write
@@ -23,26 +22,32 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8 # or your preferred version
+          version: 8
           
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: 'pnpm'
+          # Add cache-dependency-path for monorepo support
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install dependencies
+        # Run this command inside the /frontend directory
+        working-directory: ./frontend 
         run: pnpm install --frozen-lockfile
 
       - name: Build with Next.js
-        run: pnpm next build # This runs the build and automatically exports to the /out folder
+        # Run this command inside the /frontend directory
+        working-directory: ./frontend 
+        run: pnpm next build
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          # Point to the build output from the /frontend directory
+          path: ./frontend/out
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages
