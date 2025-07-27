@@ -278,7 +278,9 @@ export default function ProductsPage() {
             {filteredProducts.map((product, index) => (
               <div
                 key={product.id}
-                ref={(el) => el && (productsRef.current[index] = el)}
+                ref={(el) => {
+                  if (el) productsRef.current[index] = el;
+                }}
                 className="neuro-card p-6 hover:shadow-xl transition-all duration-300 group"
               >
                 {/* Product Header */}
