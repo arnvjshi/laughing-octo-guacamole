@@ -116,7 +116,7 @@ const nextConfig = {
   },
   
   // Output configuration
-  output: 'standalone',
+   output: 'export',
   
   // Logging
   logging: {
