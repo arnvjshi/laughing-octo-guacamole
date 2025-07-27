@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { Package, TrendingUp, DollarSign, Star, Users, Calendar, Edit, Trash2 } from "lucide-react"
 import DashboardLayout from "../../components/DashboardLayout"
+import { useRouter } from "next/navigation"
 
 interface Product {
   id: number
@@ -32,6 +33,7 @@ export default function SupplierDashboard() {
   const [isLoading, setIsLoading] = useState(true)
 
   const statsRef = useRef<HTMLDivElement[]>([])
+  const router = useRouter()
 
   useEffect(() => {
     fetchData()
@@ -487,6 +489,9 @@ export default function SupplierDashboard() {
         return renderOrders()
       case "reviews":
         return renderReviews()
+      case "account":
+        router.push("/account")
+        return null
       default:
         return renderDashboard()
     }

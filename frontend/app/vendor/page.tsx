@@ -488,6 +488,9 @@ export default function VendorDashboard() {
         return renderOrders()
       case "suppliers":
         return renderSuppliers()
+      case "account":
+        router.push("/account")
+        return null
       default:
         return renderDashboard()
     }
