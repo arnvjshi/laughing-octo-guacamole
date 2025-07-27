@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ShoppingCart, Plus, Minus, Trash2, ArrowLeft, Package, DollarSign, Sparkles, Zap } from "lucide-react"
 import { useRouter } from "next/navigation"
-import ThreeBackground from "../../components/ThreeBackground"
+//import ThreeBackground from "../../components/ThreeBackground"
 import AnimatedCard from "../../components/AnimatedCard"
 import FloatingElements from "../../components/FloatingElements"
 import GlowingButton from "../../components/GlowingButton"
@@ -234,7 +234,7 @@ export default function CartPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50 flex items-center justify-center relative overflow-hidden">
-        <ThreeBackground variant="particles" color="#f97316" intensity={0.3} />
+        
         <FloatingElements />
 
         <AnimatedCard direction="scale" trigger="immediate" className="text-center">
@@ -264,7 +264,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50 relative overflow-hidden">
-      <ThreeBackground variant="food" color="#f97316" intensity={0.2} />
+      
       <FloatingElements />
 
       {/* Animated Header */}
