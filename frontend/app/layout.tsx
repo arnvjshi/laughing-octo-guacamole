@@ -13,7 +13,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "BulkBite - Smart Group Buying for Street Vendors",
   description: "Connect street vendors with suppliers through intelligent group buying",
-    generator: 'v0.dev'
+    generator: 'arnvjshi.github.io',
 }
 
 export default function RootLayout({

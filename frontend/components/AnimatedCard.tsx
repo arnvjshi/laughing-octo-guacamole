@@ -26,7 +26,7 @@ export default function AnimatedCard({
   const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!cardRef.current) return
+    if (!cardRef.current) return undefined
 
     const element = cardRef.current
 
@@ -101,6 +101,7 @@ export default function AnimatedCard({
         element.removeEventListener("mouseleave", handleMouseLeave)
       }
     }
+    return undefined
   }, [delay, direction, trigger, duration])
 
   return (

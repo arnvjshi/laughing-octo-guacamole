@@ -14,14 +14,6 @@ export default function LandingPage() {
   const ctaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Check if user is already logged in
-    const userData = localStorage.getItem("user")
-    if (userData) {
-      const user = JSON.parse(userData)
-      router.push(user.type === "vendor" ? "/vendor" : "/supplier")
-      return
-    }
-
     // Animate page entrance
     const tl = gsap.timeline()
     tl.fromTo(heroRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" })
@@ -32,7 +24,7 @@ export default function LandingPage() {
         "-=0.5",
       )
       .fromTo(ctaRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.3")
-  }, [router])
+  }, [])
 
   const handleGetStarted = () => {
     router.push("/role-selection")
