@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, ReactNode } from "react"
 import { gsap } from "gsap"
 import { Users, Package, DollarSign, Star, TrendingUp, Calendar, MapPin, Phone } from "lucide-react"
 import DashboardLayout from "../../components/DashboardLayout"
@@ -43,7 +43,7 @@ export default function VendorDashboard() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const statsRef = useRef<HTMLDivElement[]>([])
+  const statsRef = useRef<(HTMLDivElement | null)[]>([])
   const router = useRouter()
 
   useEffect(() => {
@@ -91,175 +91,158 @@ export default function VendorDashboard() {
     }
   }
 
-  const renderDashboard = () => (
-    <div className="space-y-8">
-      {/* Welcome Header */}
-      <div className="glass-card p-6">
-        <div className="flex items-center space-x-3 mb-2">
-          <Users className="w-8 h-8 text-indigo-600" />
-          <h1 className="text-3xl font-bold font-poppins bg-gradient-to-r from-indigo-600 to-emerald-600 bg-clip-text text-transparent">
-            Welcome back!
-          </h1>
-        </div>
-        <p className="text-gray-600 font-medium">Here's what's happening with your group buying today.</p>
-      </div>
+  const renderDashboard = () => {
+    // Data for the stats cards
+    const statsData = [
+      {
+        title: "Active Groups",
+        value: groups.filter((g) => g.status === "active").length,
+        icon: <Users className="w-10 h-10 text-indigo-500 opacity-80" />,
+        trend: "+12%",
+        trendText: "from last week",
+        color: "text-indigo-600",
+      },
+      {
+        title: "Total Orders",
+        value: orders.length,
+        icon: <Package className="w-10 h-10 text-emerald-500 opacity-80" />,
+        trend: "+8%",
+        trendText: "from last week",
+        color: "text-emerald-600",
+      },
+      {
+        title: "Total Savings",
+        value: "$1,247",
+        icon: <DollarSign className="w-10 h-10 text-amber-500 opacity-80" />,
+        trend: "+23%",
+        trendText: "from last month",
+        color: "text-amber-600",
+      },
+      {
+        title: "Success Rate",
+        value: "94%",
+        icon: <Star className="w-10 h-10 text-indigo-500 opacity-80" />,
+        trend: "+2%",
+        trendText: "from last month",
+        color: "text-indigo-600",
+      },
+    ]
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
-          ref={(el) => { if (el) statsRef.current[index] = el; }}
-          className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Active Groups</h3>
-              <p className="text-3xl font-bold text-indigo-600 mt-2">
-                {groups.filter((g) => g.status === "active").length}
-              </p>
-            </div>
-            <Users className="w-10 h-10 text-indigo-500 opacity-80" />
-          </div>
-          <div className="mt-4 flex items-center text-sm">
-            <TrendingUp className="w-4 h-4 text-emerald-600 mr-1" />
-            <span className="text-emerald-600 font-semibold">+12%</span>
-            <span className="text-gray-500 ml-1">from last week</span>
-          </div>
-        </div>
-
-        <div
-          ref={(el) => { if (el) statsRef.current[index] = el; }}
-          className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Orders</h3>
-              <p className="text-3xl font-bold text-emerald-600 mt-2">{orders.length}</p>
-            </div>
-            <Package className="w-10 h-10 text-emerald-500 opacity-80" />
-          </div>
-          <div className="mt-4 flex items-center text-sm">
-            <TrendingUp className="w-4 h-4 text-emerald-600 mr-1" />
-            <span className="text-emerald-600 font-semibold">+8%</span>
-            <span className="text-gray-500 ml-1">from last week</span>
-          </div>
-        </div>
-
-        <div
-          ref={(el) => { if (el) statsRef.current[index] = el; }}
-          className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Savings</h3>
-              <p className="text-3xl font-bold text-amber-600 mt-2">$1,247</p>
-            </div>
-            <DollarSign className="w-10 h-10 text-amber-500 opacity-80" />
-          </div>
-          <div className="mt-4 flex items-center text-sm">
-            <TrendingUp className="w-4 h-4 text-emerald-600 mr-1" />
-            <span className="text-emerald-600 font-semibold">+23%</span>
-            <span className="text-gray-500 ml-1">from last month</span>
-          </div>
-        </div>
-
-        <div
-          ref={(el) => {
-            if (!statsRef.current) return;
-            statsRef.current[3] = el;
-          }}
-          className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Success Rate</h3>
-              <p className="text-3xl font-bold text-indigo-600 mt-2">94%</p>
-            </div>
-            <Star className="w-10 h-10 text-indigo-500 opacity-80" />
-          </div>
-          <div className="mt-4 flex items-center text-sm">
-            <TrendingUp className="w-4 h-4 text-emerald-600 mr-1" />
-            <span className="text-emerald-600 font-semibold">+2%</span>
-            <span className="text-gray-500 ml-1">from last month</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Groups */}
+    return (
+      <div className="space-y-8">
+        {/* Welcome Header */}
         <div className="glass-card p-6">
-          <div className="flex items-center space-x-2 mb-6">
-            <TrendingUp className="w-6 h-6 text-indigo-600" />
-            <h3 className="text-xl font-bold font-poppins text-gray-800">Hot Groups</h3>
+          <div className="flex items-center space-x-3 mb-2">
+            <Users className="w-8 h-8 text-indigo-600" />
+            <h1 className="text-3xl font-bold font-poppins bg-gradient-to-r from-indigo-600 to-emerald-600 bg-clip-text text-transparent">
+              Welcome back!
+            </h1>
           </div>
-          <div className="space-y-4">
-            {groups.slice(0, 3).map((group, index) => (
-              <div key={group.id} className="neuro-card p-4 hover:shadow-lg transition-all duration-300">
-                <div className="flex justify-between items-start mb-3">
-                  <h4 className="font-semibold text-gray-800">{group.name}</h4>
-                  <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full font-semibold">
-                    {group.status}
-                  </span>
+          <p className="text-gray-600 font-medium">Here's what's happening with your group buying today.</p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {statsData.map((stat, index) => (
+            <div
+              key={stat.title}
+              ref={(el) => { statsRef.current[index] = el }}
+              className="neuro-card p-6 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">{stat.title}</h3>
+                  <p className={`text-3xl font-bold ${stat.color} mt-2`}>{stat.value}</p>
                 </div>
-                <p className="text-sm text-gray-600 mb-3">{group.product_name}</p>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-500">Progress</span>
-                  <span className="text-sm font-semibold text-indigo-600">
-                    {group.current_quantity}/{group.target_quantity} units
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
-                  <div
-                    className="bg-gradient-to-r from-indigo-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${(group.current_quantity / group.target_quantity) * 100}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-emerald-600">${group.price_per_unit}/unit</span>
-                  <button className="neuro-button px-4 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-200">
-                    Join Group
-                  </button>
-                </div>
+                {stat.icon}
               </div>
-            ))}
-          </div>
+              <div className="mt-4 flex items-center text-sm">
+                <TrendingUp className="w-4 h-4 text-emerald-600 mr-1" />
+                <span className="text-emerald-600 font-semibold">{stat.trend}</span>
+                <span className="text-gray-500 ml-1">{stat.trendText}</span>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Recent Orders */}
-        <div className="glass-card p-6">
-          <div className="flex items-center space-x-2 mb-6">
-            <Package className="w-6 h-6 text-emerald-600" />
-            <h3 className="text-xl font-bold font-poppins text-gray-800">Recent Orders</h3>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Recent Groups */}
+          <div className="glass-card p-6">
+            <div className="flex items-center space-x-2 mb-6">
+              <TrendingUp className="w-6 h-6 text-indigo-600" />
+              <h3 className="text-xl font-bold font-poppins text-gray-800">Hot Groups</h3>
+            </div>
+            <div className="space-y-4">
+              {groups.slice(0, 3).map((group) => (
+                <div key={group.id} className="neuro-card p-4 hover:shadow-lg transition-all duration-300">
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="font-semibold text-gray-800">{group.name}</h4>
+                    <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full font-semibold">
+                      {group.status}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">{group.product_name}</p>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-gray-500">Progress</span>
+                    <span className="text-sm font-semibold text-indigo-600">
+                      {group.current_quantity}/{group.target_quantity} units
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                    <div
+                      className="bg-gradient-to-r from-indigo-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${(group.current_quantity / group.target_quantity) * 100}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold text-emerald-600">${group.price_per_unit}/unit</span>
+                    <button className="neuro-button px-4 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-200">
+                      Join Group
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="space-y-4">
-            {orders.slice(0, 4).map((order) => (
-              <div key={order.id} className="neuro-card p-4 hover:shadow-lg transition-all duration-300">
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-semibold text-gray-800">{order.group_name}</h4>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full font-semibold ${
-                      order.status === "pending"
-                        ? "bg-amber-100 text-amber-800"
-                        : order.status === "confirmed"
+
+          {/* Recent Orders */}
+          <div className="glass-card p-6">
+            <div className="flex items-center space-x-2 mb-6">
+              <Package className="w-6 h-6 text-emerald-600" />
+              <h3 className="text-xl font-bold font-poppins text-gray-800">Recent Orders</h3>
+            </div>
+            <div className="space-y-4">
+              {orders.slice(0, 4).map((order) => (
+                <div key={order.id} className="neuro-card p-4 hover:shadow-lg transition-all duration-300">
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-semibold text-gray-800">{order.group_name}</h4>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                        order.status === "pending"
+                          ? "bg-amber-100 text-amber-800"
+                          : order.status === "confirmed"
                           ? "bg-blue-100 text-blue-800"
                           : "bg-emerald-100 text-emerald-800"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
+                      }`}
+                    >
+                      {order.status}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-500">{order.quantity} units</span>
+                    <span className="text-lg font-bold text-emerald-600">${order.total_price.toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">{order.quantity} units</span>
-                  <span className="text-lg font-bold text-emerald-600">${order.total_price.toFixed(2)}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 
+  // The rest of the component remains the same
   const renderGroups = () => (
     <div className="space-y-6">
       <div className="glass-card p-6">
@@ -389,8 +372,8 @@ export default function VendorDashboard() {
                           order.status === "pending"
                             ? "text-amber-600"
                             : order.status === "confirmed"
-                              ? "text-blue-600"
-                              : "text-emerald-600"
+                            ? "text-blue-600"
+                            : "text-emerald-600"
                         }`}
                       >
                         {order.status}
@@ -411,8 +394,8 @@ export default function VendorDashboard() {
                       order.status === "pending"
                         ? "bg-amber-100 text-amber-800"
                         : order.status === "confirmed"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-emerald-100 text-emerald-800"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-emerald-100 text-emerald-800"
                     }`}
                   >
                     {order.status}
