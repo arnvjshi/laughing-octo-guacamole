@@ -1,0 +1,297 @@
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String         @id @default(uuid())
+  clerkId        String         @unique
+  phone          String        @unique
+  name           String
+  password       String        
+  email          String       @unique
+  language       String         @default("en")
+  city           String
+  area           String
+  address        String?
+  userType       UserType       @default(VENDOR)
+
+  businessName        String?
+  businessCategory    VendorCategory?
+  gstNumber           String?
+
+  companyName         String?
+  rating              Float?        @default(5.0)
+  isVerified          Boolean       @default(false)
+
+  vendorGroups        GroupMember[]
+  messages            ChatMessage[] @relation(name: "ChatMessageToUser")
+  createdGroups       Group[]       @relation("GroupCreator")
+  supplierProfile     Supplier?
+  notifications       Notification[]
+  productOrders       ProductOrder[]
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}
+
+enum UserType {
+  VENDOR
+  SUPPLIER
+}
+
+enum VendorCategory {
+  GROCERY
+  RESTAURANT
+  VEGETABLE_VENDOR
+  KITCHEN_SUPPLIER
+  RETAIL_STORE
+  MEDICAL_SHOP
+  HARDWARE_STORE
+  STATIONERY
+  ELECTRONICS
+  CLOTHING
+  OTHER
+}
+
+model Group {
+  id             String         @id @default(uuid())
+  name           String
+  description    String?
+  creatorId      String
+  city           String
+  area           String
+  deliveryRadius Float         @default(5.0)
+  minMembers     Int           @default(2)
+  maxMembers     Int           @default(50)
+  status         GroupStatus   @default(ACTIVE)
+  expiresAt      DateTime?
+
+  creator        User          @relation("GroupCreator", fields: [creatorId], references: [id])
+  members        GroupMember[]
+  productOrders  ProductOrder[]
+  chatMessages   ChatMessage[]
+  orders         Order[]
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([city, area])
+  @@index([status])
+}
+
+enum GroupStatus {
+  ACTIVE
+  LOCKED
+  ORDER_PLACED
+  COMPLETED
+  CANCELLED
+}
+
+model GroupMember {
+  id        String     @id @default(uuid())
+  userId    String
+  groupId   String
+  role      MemberRole @default(MEMBER)
+  joinedAt  DateTime   @default(now())
+  isActive  Boolean    @default(true)
+
+  user      User       @relation(fields: [userId], references: [id])
+  group     Group      @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])
+}
+
+enum MemberRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+model Product {
+  id          String           @id @default(uuid())
+  name        String
+  description String?
+  category    ProductCategory
+  unit        String           @default("kg")
+  imageUrl    String?
+
+  suppliers   SupplierProduct[]
+  orders      ProductOrder[]
+
+  createdAt   DateTime         @default(now())
+
+  @@index([category])
+}
+
+enum ProductCategory {
+  VEGETABLES
+  FRUITS
+  GRAINS_CEREALS
+  DAIRY
+  MEAT_POULTRY
+  SPICES
+  COOKING_OIL
+  BEVERAGES
+  SNACKS
+  CLEANING_SUPPLIES
+  PACKAGING
+  EQUIPMENT
+  OTHER
+}
+
+model Supplier {
+  id          String     @id @default(uuid())
+  userId      String     @unique
+  companyName String
+  description String?
+  rating      Float      @default(5.0)
+  totalOrders Int        @default(0)
+  isVerified  Boolean    @default(false)
+
+  user        User       @relation(fields: [userId], references: [id])
+  products    SupplierProduct[]
+  orders      Order[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([rating])
+}
+
+model SupplierProduct {
+  id             String     @id @default(uuid())
+  supplierId     String
+  productId      String
+  pricePerUnit   Float
+  minQuantity    Float
+  maxQuantity    Float?
+  discountTiers  Json?
+  isAvailable    Boolean    @default(true)
+  deliveryTime   String?
+
+  supplier       Supplier   @relation(fields: [supplierId], references: [id])
+  product        Product    @relation(fields: [productId], references: [id])
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([supplierId, productId])
+  @@index([pricePerUnit])
+}
+
+model ProductOrder {
+  id          String   @id @default(uuid())
+  groupId     String
+  productId   String
+  userId      String
+  quantity    Float
+  unitPrice   Float
+  totalPrice  Float
+  notes       String?
+
+  group       Group    @relation(fields: [groupId], references: [id])
+  product     Product  @relation(fields: [productId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  groupId         String
+  supplierId      String
+  orderNumber     String        @unique
+  subtotal        Float
+  deliveryCharge  Float         @default(0)
+  tax             Float         @default(0)
+  discount        Float         @default(0)
+  totalAmount     Float
+  deliveryAddress String
+  deliveryEta     DateTime?
+  deliveryNotes   String?
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  trackingNumber  String?
+
+  group           Group         @relation(fields: [groupId], references: [id])
+  supplier        Supplier      @relation(fields: [supplierId], references: [id])
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status])
+  @@index([orderNumber])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  PACKED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model ChatMessage {
+  id              String   @id @default(uuid())
+  groupId         String
+  senderId        String
+  content         String
+  messageType     MessageType @default(TEXT)
+  fileUrl         String?
+  isSystemMessage Boolean     @default(false)
+
+  group           Group    @relation(fields: [groupId], references: [id])
+  sender          User     @relation(name: "ChatMessageToUser", fields: [senderId], references: [id])
+
+  createdAt       DateTime @default(now())
+
+  @@index([groupId, createdAt])
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  DOCUMENT
+  SYSTEM_NOTIFICATION
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  content   String
+  type      NotificationType
+  isRead    Boolean  @default(false)
+  metadata  Json?
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+enum NotificationType {
+  GROUP_INVITATION
+  ORDER_UPDATE
+  PAYMENT_REMINDER
+  DELIVERY_UPDATE
+  SYSTEM_ANNOUNCEMENT
+}
