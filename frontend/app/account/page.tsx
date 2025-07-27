@@ -687,9 +687,7 @@ export default function AccountPage() {
       </div>
 
       <div
-        ref={(el) => {
-          containerRef.current = el
-        }}
+        ref={containerRef}
         className="max-w-7xl mx-auto px-4 space-y-8"
       >
         {/* Enhanced Tab Navigation */}
