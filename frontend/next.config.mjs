@@ -2,7 +2,7 @@
 const nextConfig = {
   // Core settings
   reactStrictMode: true,
-  swcMinify: true,
+  //swcMinify: true,
   
   // Performance optimizations
   compiler: {
