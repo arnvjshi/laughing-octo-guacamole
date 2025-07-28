@@ -19,7 +19,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      - name: Install Dependencies
+        working-directory: ./frontend
         run: npm install --force
 
       - name: Run tests
